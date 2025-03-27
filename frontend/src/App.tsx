@@ -1,17 +1,22 @@
 import './App.css';
-import Header from './Header';
-import Footer from './Footer';
-import BookLists from './BookLists';
-import AmazonJourney from './AmazonJourney';
+import { CartProvider } from './context/CartContext';
+import CartPage from './pages/CartPage';
+import BooksPage from './pages/BooksPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
     <>
-      <Header />
-      <AmazonJourney />
-      <br />
-      <BookLists />
-      <Footer />
+      <CartProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<BooksPage />} />
+            <Route path="/books" element={<BooksPage />} />
+
+            <Route path="/cart" element={<CartPage />} />
+          </Routes>
+        </Router>
+      </CartProvider>
     </>
   );
 }
