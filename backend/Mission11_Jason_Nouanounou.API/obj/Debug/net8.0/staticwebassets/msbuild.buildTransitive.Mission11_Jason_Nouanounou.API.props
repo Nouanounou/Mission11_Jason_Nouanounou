@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Mission11_Jason_Nouanounou.API.props" />
-</Project>
