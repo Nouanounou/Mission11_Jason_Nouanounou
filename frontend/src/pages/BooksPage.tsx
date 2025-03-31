@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom'; // <-- Import React Router Link
 import CategoryFilter from '../components/CategoryFilter';
 import WelcomeBand from '../components/WelcomeBand';
 import CartSummary from '../components/CartSummary';
@@ -9,11 +10,20 @@ function BooksPage() {
 
   return (
     <div className="container mt-4">
-      {/* Bootstrap Navbar (New Functionality) */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <a className="navbar-brand" href="#">
-          Bookstore
-        </a>
+      {/* Bootstrap Navbar with Logo using React Router Link for the users to navigate the filtered page */}
+      <nav
+        className="navbar navbar-expand-lg navbar-light bg-light mb-4"
+        style={{ height: '60px' }}
+      >
+        <Link to="/" className="navbar-brand d-flex align-items-center">
+          <img
+            src="/universe_1.png"
+            alt="Logo"
+            width="60"
+            height="60"
+            className="d-inline-block align-text-top me-2"
+          />
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -25,36 +35,39 @@ function BooksPage() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
+        <div
+          className="collapse navbar-collapse align-items-center"
+          id="navbarNav"
+        >
           <ul className="navbar-nav">
             <li className="nav-item active">
               <a
                 className="nav-link"
-                href="https://www.byustore.com/books-main/textbooks?srsltid=AfmBOoq1Y7DwrLfR4DKDdPLZPGLFiVOu_m8C_cIn7QoHvz3FlNV1RJ2h"
+                href="https://scriptures.byu.edu/#::s"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                BYU-Books
+                Scripture
               </a>
             </li>
             <li className="nav-item">
               <a
                 className="nav-link"
-                href="https://www.youtube.com/watch?v=6ibCtsHgz3Y"
+                href="https://www.etsy.com/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                TED-Book
+                Rare Finds
               </a>
             </li>
             <li className="nav-item">
               <a
                 className="nav-link"
-                href="https://blog.reedsy.com/book-genres/"
+                href="https://www.barnesandnoble.com/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                More-Categories
+                Extended Collection
               </a>
             </li>
           </ul>
@@ -76,6 +89,13 @@ function BooksPage() {
           <BookLists selectedCategories={selectedCategories} />
         </div>
       </div>
+
+      {/* Boostrap: Footer at the bottom of the page for copyright purposes */}
+      <footer className="text-center mt-5 py-3 border-top">
+        <small>
+          © {new Date().getFullYear()} BookStore Universe. All rights reserved.
+        </small>
+      </footer>
     </div>
   );
 }

@@ -3,16 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { Books } from '../types/Books';
 import { CartItem } from '../types/CartItem';
+import { fetchBooks } from '../api/ProjectsAPI';
 
 function BookLists({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<Books[]>([]);
   const [pageSize, setPageSize] = useState<number>(5);
   const [pageNum, setPageNum] = useState<number>(1);
-  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<string>('asc');
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  //Check for errors
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const handleToCart = (book: Books) => {
     const cartItem: CartItem = {
@@ -20,41 +23,38 @@ function BookLists({ selectedCategories }: { selectedCategories: string[] }) {
       title: book.title,
       price: book.price,
       quantity: 1,
+      donationAmount: 0,
     };
     addToCart(cartItem);
     navigate('/cart');
   };
 
+  //Trying this!
+
   useEffect(() => {
-    const fetchBooks = async () => {
-      const params = new URLSearchParams({
-        pageSize: pageSize.toString(),
-        pageNum: pageNum.toString(),
-        sortOrder,
-      });
-
-      selectedCategories.forEach((cat) => {
-        params.append('categories', cat);
-      });
-
+    const loadBooks = async () => {
       try {
-        const response = await fetch(
-          `https://localhost:5000/Book/AllBooks?${params.toString()}`
+        setLoading(true);
+        const data = await fetchBooks(
+          pageSize,
+          pageNum,
+          sortOrder,
+          selectedCategories
         );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
         setBooks(data.books);
-        setTotalItems(data.totalNumBooks);
         setTotalPages(Math.ceil(data.totalNumBooks / pageSize));
       } catch (error) {
-        console.error('Fetching books failed:', error);
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchBooks();
+    loadBooks();
   }, [pageSize, pageNum, sortOrder, selectedCategories]);
+
+  if (loading) return <p>Loading books...</p>;
+  if (error) return <p className="text-red-500">Error: (error)</p>;
 
   return (
     <>
@@ -130,34 +130,37 @@ function BookLists({ selectedCategories }: { selectedCategories: string[] }) {
       </div>
 
       <br />
-      <label>
-        Results Per Page:
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-            setPageNum(1);
-          }}
-          className="form-select"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select>
-      </label>
+      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+        <label>
+          Results Per Page:
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setPageNum(1);
+            }}
+            className="form-select w-auto d-inline-block ms-2"
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </label>
+      </div>
 
-      <br />
-      <label>
-        Sort By Title:
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-          className="form-select"
-        >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </label>
+      <div style={{ textAlign: 'center' }}>
+        <label>
+          Sort By Title:
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="form-select w-auto d-inline-block ms-2"
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </label>
+      </div>
     </>
   );
 }

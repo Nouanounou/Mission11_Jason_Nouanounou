@@ -1,0 +1,6 @@
+@Mission11_Jason_Nouanounou.API_HostAddress = http://localhost:5123
+
+GET {{Mission11_Jason_Nouanounou.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
