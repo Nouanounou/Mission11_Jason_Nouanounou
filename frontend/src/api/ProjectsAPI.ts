@@ -1,9 +1,7 @@
 import { Books } from '../types/Books';
 
 interface FetchBooksResponse {
-  books(books: any): unknown;
-  Books(books: any): unknown;
-  projects: Books[];
+  books: Books[]; // Lowercase and properly typed
   totalNumBooks: number;
 }
 
@@ -29,7 +27,7 @@ export const fetchBooks = async (
     if (!response.ok) {
       throw new Error('Failed to fetch Books');
     }
-    return await response.json();
+    return (await response.json()) as FetchBooksResponse; //what we expect
   } catch (error) {
     console.error('Error fetching books:', error);
     throw error;
@@ -50,7 +48,7 @@ export const addBook = async (newBook: Books): Promise<Books> => {
       throw new Error('Failed to add book');
     }
 
-    return await response.json();
+    return (await response.json()) as Books; //cast for safety
   } catch (error) {
     console.error('Error adding book', error);
     throw error;
