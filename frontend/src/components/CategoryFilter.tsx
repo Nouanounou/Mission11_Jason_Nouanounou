@@ -18,7 +18,14 @@ function CategoryFilter({
         );
         const data = await response.json();
         console.log('Fetched categories:', data);
-        setCategories(data);
+
+        const categoriesList = Array.isArray(data)
+          ? data.map((cat) =>
+              typeof cat === 'string' ? cat : cat.categoryName
+            )
+          : [];
+
+        setCategories(categoriesList);
       } catch (error) {
         console.error('Error fetching categories', error);
       }
