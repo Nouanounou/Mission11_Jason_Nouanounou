@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { Books } from '../types/Books';
 import { CartItem } from '../types/CartItem';
 import { fetchBooks } from '../api/ProjectsAPI';
+import Pagination from './Pagination';
 
 function BookLists({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<Books[]>([]);
@@ -100,54 +101,7 @@ function BookLists({ selectedCategories }: { selectedCategories: string[] }) {
         </div>
       ))}
 
-      <div className="pagination">
-        <button
-          disabled={pageNum === 1}
-          onClick={() => setPageNum(pageNum - 1)}
-          className="btn btn-primary"
-        >
-          Previous
-        </button>
-
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => setPageNum(i + 1)}
-            disabled={pageNum === i + 1}
-            className="btn btn-outline-secondary"
-          >
-            {i + 1}
-          </button>
-        ))}
-
-        <button
-          disabled={pageNum === totalPages}
-          onClick={() => setPageNum(pageNum + 1)}
-          className="btn btn-primary"
-        >
-          Next
-        </button>
-      </div>
-
       <br />
-      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-        <label>
-          Results Per Page:
-          <select
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-              setPageNum(1);
-            }}
-            className="form-select w-auto d-inline-block ms-2"
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-          </select>
-        </label>
-      </div>
-
       <div style={{ textAlign: 'center' }}>
         <label>
           Sort By Title:
@@ -161,6 +115,17 @@ function BookLists({ selectedCategories }: { selectedCategories: string[] }) {
           </select>
         </label>
       </div>
+
+      <Pagination
+        currentPage={pageNum}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setPageNum}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPageNum(1);
+        }}
+      />
     </>
   );
 }

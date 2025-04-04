@@ -16,8 +16,16 @@ builder.Services.AddDbContext<BooksDbContext>(options =>
     // Get the connection string named "BooksConnection" from the  appsettings.json
     options.UseSqlite(builder.Configuration.GetConnectionString("BooksConnection"));
 });
-builder.Services.AddCors();
 
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy("This is the new policy",
+    policy => {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -28,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(x => x.WithOrigins("http://localhost:3000"));
+app.UseCors("This is the new policy");
 
 app.UseHttpsRedirection();
 

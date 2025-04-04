@@ -64,6 +64,52 @@ namespace BookProject.API.Controllers // This defines the namespace, like a fold
             return Ok(bookCategories);
         }
 
+         [HttpPost("AddBook")]
+        public IActionResult AddBook([FromBody] Books newBook)
+        {
+            _bookContext.Books.Add(newBook);
+            _bookContext.SaveChanges();
+            return Ok(newBook);
+        }
+
+         [HttpPut("UpdateBooks/{bookID}")]
+        public IActionResult UpdateBooks(int bookID, [FromBody] Books updatedBook)
+        {
+            var existingBook = _bookContext.Books.Find(bookID);
+
+            existingBook.Title = updatedBook.Title;
+            existingBook.Author = updatedBook.Author;
+            existingBook.Publisher = updatedBook.Publisher;
+            existingBook.ISBN = updatedBook.ISBN;
+            existingBook.Classification = updatedBook.Classification;
+            existingBook.Category = updatedBook.Category;
+            existingBook.PageCount = updatedBook.PageCount;
+            existingBook.Price = updatedBook.Price;
+
+            _bookContext.Books.Update(existingBook);
+            _bookContext.SaveChanges();
+
+            return Ok(existingBook);
+        }
+
+        [HttpDelete("DeleteBooks/{bookID}")]
+        public IActionResult DeleteBooks(int bookID)
+        {
+            var book = _bookContext.Books.Find(bookID);
+            
+            if (book == null)
+            {
+                return NotFound(new { message = "Book not found" });
+            }
+
+            _bookContext.Books.Remove(book);
+            _bookContext.SaveChanges();
+
+            return NoContent(); // 204 No Content means successful deletion
+        }
+
+        [HttpGet("Ping")]
+        public IActionResult Ping() => Ok("Pong from deployed API");
 
     }
 }

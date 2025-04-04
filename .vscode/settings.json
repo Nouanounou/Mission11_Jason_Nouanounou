@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "undefined/subscriptions/a1c35b6b-fb68-4ebe-bd1b-68396a3551be/resourceGroups/appsvc_windows_eastus/providers/Microsoft.Web/sites/BookProject-Nouanounou-Backend",
+  "appService.deploySubpath": "backend\\Mission11_Jason_Nouanounou.API\\publish"
+}
