@@ -75,6 +75,7 @@ function BooksPage() {
       </nav>
 
       <WelcomeBand />
+      <CartSummary />
 
       {/* Book Lists with CategoryFilter */}
       <div className="row">
